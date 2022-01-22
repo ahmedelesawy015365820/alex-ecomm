@@ -29,8 +29,7 @@ class UserRequest extends FormRequest
                 'last_name' => 'required',
                 'email' => "required|email|unique:users,email,{$this->user->id}",
                 'username' => "required|min:8|max:16|unique:users,username,{$this->user->id}",
-                'password' => 'required|same:confirm-password',
-                'Status'  => 'required',
+                'password' => 'same:confirm-password',
                 'roles_name' => 'required',
                 'image' => 'image:mimes,png,jepg,jpg'
             ];
@@ -41,7 +40,6 @@ class UserRequest extends FormRequest
                 'email' => "required|email|unique:users,email",
                 'username' => "required|min:8|max:16|unique:users,username",
                 'password' => 'required|same:confirm-password',
-                'Status'  => 'required',
                 'roles_name' => 'required',
                 'image' => 'image:mimes,png,jepg,jpg'
             ];

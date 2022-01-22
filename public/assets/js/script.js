@@ -1293,6 +1293,7 @@
         $('#rtl_btn').hide();
         $('#ltr_btn').show();
     });
+
     $(".setting_buttons li").on('click', function (){
         $(this).addClass('active').siblings().removeClass('active');
     });

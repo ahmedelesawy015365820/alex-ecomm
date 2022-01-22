@@ -1,22 +1,13 @@
-<!-- footer start-->
-<footer class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6 footer-copyright">
-                <p class="mb-0">Copyright 2019 © Bigdeal All rights reserved.</p>
-            </div>
-            <div class="col-md-6">
-                <p class="pull-right mb-0">Hand crafted & made with<i class="fa fa-heart"></i></p>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- footer end-->
+
 
 <!-- Scripts -->
 {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
 <!-- latest jquery-->
 <script src="{{ asset('assets/js/jquery-3.3.1.min.js')}}"></script>
+
+<!-- Bootstrap js-->
+<script src="{{asset('assets/js/popper.min.js')}}"></script>
+<script src="{{asset('assets/js/bootstrap.js')}}"></script>
 
 <!-- feather icon js-->
 <script src="{{ asset('assets/js/icons/feather-icon/feather.min.js')}}"></script>
@@ -24,10 +15,6 @@
 
 <!-- Sidebar jquery-->
 <script src="{{ asset('assets/js/sidebar-menu.js')}}"></script>
-
-<!--chartist js-->
-<script src="{{ asset('assets/js/chart/chartist/chartist.js')}}"></script>
-
 
 <!-- lazyload js-->
 <script src="{{ asset('assets/js/lazysizes.min.js')}}"></script>
@@ -42,26 +29,7 @@
 <script src="{{ asset('assets/js/counter/jquery.counterup.min.js')}}"></script>
 <script src="{{ asset('assets/js/counter/counter-custom.js')}}"></script>
 
-<!--Customizer admin-->
-<script src="{{ asset('assets/js/admin-customizer.js')}}"></script>
-
-<!--map js-->
-<script src="{{ asset('assets/js/vector-map/jquery-jvectormap-2.0.2.min.js')}}"></script>
-<script src="{{ asset('assets/js/vector-map/map/jquery-jvectormap-world-mill-en.js')}}"></script>
-
-<!--apex chart js-->
-<script src="{{ asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
-<script src="{{ asset('assets/js/chart/apex-chart/stock-prices.js')}}"></script>
-
-<!--chartjs js-->
-<script src="{{ asset('assets/js/chart/flot-chart/excanvas.js')}}"></script>
-<script src="{{ asset('assets/js/chart/flot-chart/jquery.flot.js')}}"></script>
-<script src="{{ asset('assets/js/chart/flot-chart/jquery.flot.time.js')}}"></script>
-<script src="{{ asset('assets/js/chart/flot-chart/jquery.flot.categories.js')}}"></script>
-<script src="{{ asset('assets/js/chart/flot-chart/jquery.flot.stack.js')}}"></script>
-<script src="{{ asset('assets/js/chart/flot-chart/jquery.flot.pie.js')}}"></script>
-<!--dashboard custom js-->
-<script src="{{ asset('assets/js/dashboard/default.js')}}"></script>
+@yield('chart')
 
 <!--right sidebar js-->
 <script src="{{ asset('assets/js/chat-menu.js')}}"></script>
@@ -74,6 +42,25 @@
 
 <!--script admin-->
 <script src="{{ asset('assets/js/admin-script.js')}}"></script>
+
+<script>
+    $('.custom-theme').on('click', function() {
+    if($('.custom-theme').hasClass('rtl')){
+        document.querySelector(".ar").click();
+    }else{
+        document.querySelector(".en").click();
+    }
+    });
+
+    $('.name-ar').on('input', function(e) {
+            $('.slug-ar').val($(this).val());
+    });
+
+    $('.name-en').on('input', function(e) {
+            $('.slug-en').val($(this).val());
+    });
+
+</script>
 
 </body>
 </html>

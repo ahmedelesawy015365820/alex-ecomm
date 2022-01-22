@@ -1,7 +1,7 @@
 <!-- Page Header Start-->
 <div class="page-main-header">
     <div class="main-header-left">
-        <div class="logo-wrapper"><a href="index.html"><img class="blur-up lazyloaded" src="../assets/images/layout-2/logo/logo.png" alt=""></a></div>
+        <div class="logo-wrapper"><a href="index.html"><img class="blur-up lazyloaded" src="{{asset('assets/images/layout-2/logo/logo.png')}}" alt=""></a></div>
     </div>
     <div class="main-header-right row">
         <div class="mobile-sidebar">
@@ -20,13 +20,16 @@
                         </div>
                     </form>
                 </li>
-                <li class="onhover-dropdown"><a class="txt-dark" href="#">
-                    <h6>EN</h6></a>
+                <li class="onhover-dropdown"><a class="txt-dark" href="#"><h6>{{ strtoupper(LaravelLocalization::getCurrentLocale()) }}</h6></a>
                     <ul class="language-dropdown onhover-show-div p-20">
-                        <li><a href="#" data-lng="pt"><i class="flag-icon flag-icon-uy"></i> Portuguese</a></li>
-                        <li><a href="#" data-lng="es"><i class="flag-icon flag-icon-um"></i> Spanish</a></li>
-                        <li><a href="#" data-lng="en"><i class="flag-icon flag-icon-is"></i> English</a></li>
-                        <li><a href="#" data-lng="fr"><i class="flag-icon flag-icon-nz"></i> French</a></li>
+                        @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                        <li>
+                            <a class="{{$localeCode}}" rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                <i class="flag-icon flag-icon-{{$properties['native'] == "English" ? 'is' : 'ar';}}"></i>
+                                {{ $properties['native'] }}
+                            </a>
+                        </li>
+                        @endforeach
                     </ul>
                 </li>
                 <li><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a></li>
@@ -64,7 +67,7 @@
                 </li>
                 <li><a href="#"><i class="right_side_toggle" data-feather="message-square"></i><span class="dot"></span></a></li>
                 <li class="onhover-dropdown">
-                    <div class="media align-items-center"><img class="align-self-center pull-right img-50 rounded-circle blur-up lazyloaded" src="../assets/images/dashboard/man.png" alt="header-user">
+                    <div class="media align-items-center"><img class="align-self-center pull-right img-50 rounded-circle blur-up lazyloaded" src="{{asset('assets/images/dashboard/man.png')}}" alt="header-user">
                         <div class="dotted-animation"><span class="animate-circle"></span><span class="main-circle"></span></div>
                     </div>
                     <ul class="profile-dropdown onhover-show-div p-20 profile-dropdown-hover">

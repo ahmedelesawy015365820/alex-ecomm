@@ -3,23 +3,24 @@
 namespace App\Repository\User;
 
 use App\Models\User;
-use Illuminate\Support\Facades\DB as FacadesDB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserInterfaceRepository {
 
     public function index($request)
     {
 
-        $data = User::when($request->search,function ($q) use ($request){
+        $data = User::whereAuth(1)->when($request->search,function ($q) use ($request){
 
             return $q->where('id','!=','1')
                     ->where('first_name','like',"%". $request->search ."%")
-                    ->orWhere('last_name','like',"%". $request->search ."%");
+                    ->orWhere('last_name','like',"%". $request->search ."%")
+                    ->orWhere('username','like',"%". $request->search ."%");
 
-        })->orderBy('id','ASC')->paginate(5);
+        })->orderBy('id','DESC')->paginate(5);
 
         return view('dashboard.users.index',compact('data'))->with('i', ($request->input('page', 1) - 1) * 5);
 
@@ -27,9 +28,9 @@ class UserRepository implements UserInterfaceRepository {
 
     public function create(){
 
-        $roles = FacadesDB::table('roles')->where('name','!=','SuperAdmin')->get();
+        $roles = DB::table('roles')->where('name','!=','SuperAdmin')->get();
 
-        return view('dashboard.users.add',compact('roles'));
+        return view('dashboard.users.create',compact('roles'));
 
     }//*****end create
 
@@ -37,46 +38,32 @@ class UserRepository implements UserInterfaceRepository {
     {
 
         try{
-
+            DB::beginTransaction();
             $input = $request->all();
-
-            if(!$request->hasFile('image')){
-
-                $input['image'] = '6.jpg';
-
-            }else{
-
-                $image = $request->image;
-
-                // picture move
-                $name = $image->getClientOriginalName();
-                $image->storeAs($request->username, $name,'profile');
-
-                $input['image'] = $request->username.'/'.$image;
-
-            }
-
-            $input['password'] = Hash::make($input['password']);
-
+            $input['auth'] = 1;
             $user = User::create($input);
-
             $user->assignRole($request->input('roles_name'));
+            toastr()->success('Successfully added');
 
-            return redirect()->route('admin.users.index')->with('success',trans('site.success'));
+            DB::commit();
+            return redirect()->route('users.index');
 
         }
-        catch(\Exception $e){
+        catch(\Exception $ex){
 
+            toastr()->error($ex);
+            DB::rollBack();
+            return redirect()->route('users.index');
         }
 
     }//*****end store
 
-    public function edit($id)
+    public function edit($user)
     {
 
-        $user = User::find($id);
+        $user = User::find($user->id);
 
-        $roles = FacadesDB::table('roles')->where('name','!=','SuperAdmin')->get();
+        $roles = DB::table('roles')->where('name','!=','SuperAdmin')->get();
 
         $userRole = $user->roles->pluck('name','name')->all();
 
@@ -86,61 +73,48 @@ class UserRepository implements UserInterfaceRepository {
 
     public function update($request, $user)
     {
-
         try{
-
-            $user = User::find($user->id);
-            $input = $request->all();
-
-            if ($request->hasFile('image') && $user->image != '6.jpg'){
-
-                Storage::disk('profile')->delete( $user->image );
-
-                $image = $request->image;
-
-                // picture move
-                $name = $image->getClientOriginalName();
-                $image->storeAs($user->email, $name,'profile');
-
-                $input['image'] = $request->email.'/'.$image;
-
-            }
-
-            if(!empty($input['password'])){
-                $input['password'] = Hash::make($input['password']);
-            }else{
-                $input = array_except($input,array('password'));
-            }
-
-            $user = User::find($user->id);
-
-            $user->update($input);
-
-            FacadesDB::table('model_has_roles')->where('model_id',$user->id)->delete();
-
+            DB::beginTransaction();
+            $user->update($request->validated());
+            DB::table('model_has_roles')->where('model_id',$user->id)->delete();
             $user->assignRole($request->input('roles_name'));
+            toastr()->success('Edited successfully');
 
-            return redirect()->route('admin.users.index')->with('success',trans('site.success'));
+            DB::commit();
+            return redirect()->route('users.index');
 
         }
-        catch(\Exception $e){
+        catch(\Exception $ex){
 
+            toastr()->error($ex);
+            DB::rollBack();
+            return redirect()->route('roles.index');
         }
 
     }//*****end update
 
-    public function destroy($request)
+    public function destroy($user)
     {
+        try{
 
-        $user = User::find($request->user_id);
+            DB::beginTransaction();
 
-        if($user->image != '6.jpg')
-            Storage::disk('profile')->delete( $user->image );
+            if($user->image != '')
+                Storage::disk('profile')->delete($user->username.'/'. $user->image );
 
-        $user->delete();
+            $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success',trans('site.true-delete'));
+            toastr()->success('Deleted successfully');
+            DB::commit();
+            return redirect()->route('users.index');
 
+        }
+        catch( \Exception $ex){
+
+            toastr()->error($ex);
+            DB::rollBack();
+            return redirect()->route('users.index');
+        }
     }//*****end destroy
 
 

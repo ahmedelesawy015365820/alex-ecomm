@@ -9,22 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @param  string|null  ...$guards
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
-    public function handle(Request $request, Closure $next,...$guards )
+
+    public function handle(Request $request, Closure $next, $redirectTo ,...$guards )
     {
 
         if (Auth::guard("web")->check()) {
-            if(auth()->user()->auth == 1){
-                if(request()->routeIs('admin') || request()->is("admin/*")){
-                    return redirect('admin');
-                }
+
+            if(request()->routeIs('admin.login')){
+                return  redirect($redirectTo);
+            }
+
+            if((request()->routeIs('admin') || request()->is("admin/*"))){
+                return  redirect($redirectTo);
             }else{
                 return redirect('/');
             }

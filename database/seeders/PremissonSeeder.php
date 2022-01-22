@@ -15,7 +15,6 @@ class PremissonSeeder extends Seeder
     public function run()
     {
         $permissions = [
-            'user',
             'user-list',
             'user-create',
             'user-edit',
@@ -25,6 +24,10 @@ class PremissonSeeder extends Seeder
             'Permission-create',
             'Permission-edit',
             'Permission-delete',
+            'Category-list',
+            'Category-create',
+            'Category-edit',
+            'Category-delete'
             ];
 
         foreach ($permissions as $permission) {

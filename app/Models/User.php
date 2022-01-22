@@ -38,6 +38,10 @@ class User extends Authenticatable
         return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
     }
 
+    public function setPasswordAttribute($value){
+        $this->attributes['password'] = bcrypt($value);
+    }
+
     /**
      * The attributes that should be cast.
      *

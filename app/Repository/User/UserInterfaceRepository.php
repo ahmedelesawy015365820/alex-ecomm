@@ -14,6 +14,6 @@ interface UserInterfaceRepository {
 
     public function update($request, $user);
 
-    public function destroy($request);
+    public function destroy($user);
 
 }
