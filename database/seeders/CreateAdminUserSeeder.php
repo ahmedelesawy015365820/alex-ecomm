@@ -21,8 +21,8 @@ class CreateAdminUserSeeder extends Seeder
             'first_name' => 'ahmed',
             'last_name' => 'elesawy',
             'username' => 'elesawy20',
-            'email' => 'ahmed.elesawy202020@gmail.com',
-            'password' => bcrypt('015365820'),
+            'email' => 'admin@admin.com',
+            'password' => 12345678,
             'roles_name' => 'SuperAdmin',
             'auth' => 1,
             'image'  => 'ahmed.jpg'

@@ -13,16 +13,20 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, $redirectTo ,...$guards )
     {
 
-        if (Auth::guard("web")->check()) {
+        $guards = empty($guards) ? [null] : $guards;
 
-            if(request()->routeIs('admin.login')){
-                return  redirect($redirectTo);
-            }
+        foreach ($guards as $guard) {
+            if (Auth::guard("web")->check()) {
 
-            if((request()->routeIs('admin') || request()->is("admin/*"))){
-                return  redirect($redirectTo);
-            }else{
-                return redirect('/');
+                if(request()->routeIs('admin.login')){
+                    return  redirect($redirectTo);
+                }
+
+                if((request()->routeIs('admin') || request()->is("admin/*"))){
+                    return  redirect($redirectTo);
+                }else{
+                    return redirect('/');
+                }
             }
         }
 

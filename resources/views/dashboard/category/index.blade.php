@@ -25,6 +25,20 @@ Category List
         </div>
     </div>
 </div>
+
+@if (count($errors) > 0)
+<div class="alert alert-danger">
+    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>error</strong>
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 <!-- Container-fluid Ends-->
 
 <!-- Container-fluid starts-->
@@ -39,7 +53,7 @@ Category List
                 <div class="col-xl-6 col-md-4 row align-items-center">
                     @include('dashboard.category.seaechPartial')
                 </div>
-                @can('user-create')
+                @can('Category-create')
                 <div class="col-xl-3 btn-popup pull-right">
                     <button type="button"
                         class="btn btn-secondary"
@@ -51,9 +65,9 @@ Category List
                     </button>
                 </div>
 
-                {{-- start create model --}}
-                @include('dashboard.category.createPartial')
-                {{-- end delete model --}}
+                    {{-- start create model --}}
+                    @include('dashboard.category.createPartial')
+                    {{-- end delete model --}}
                 @endcan
             </div>
 
@@ -75,7 +89,7 @@ Category List
                             <td>{{ $category->status() }}</td>
                             <td>
 
-                                @can('user-edit')
+                                @can('Category-edit')
                                 <button type="button"
                                     data-toggle="modal"
                                     class="btn btn-sm btn-info"
@@ -84,9 +98,13 @@ Category List
                                 >
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </button>
+
+                                    {{-- start edit model --}}
+                                    @include('dashboard.category.updatePartial')
+                                    {{-- end edit model --}}
                                 @endcan
 
-                                @can('user-delete')
+                                @can('Category-delete')
                                 <button type="button"
                                     class="btn btn-sm btn-danger"
                                     data-toggle="modal"
@@ -95,17 +113,13 @@ Category List
                                 >
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
+
+                                    {{-- start delete model --}}
+                                    @include('dashboard.category.deletePartial')
+                                    {{-- end delete model --}}
                                 @endcan
 
                             </td>
-
-                            {{-- start edit model --}}
-                            @include('dashboard.category.updatePartial')
-                            {{-- end edit model --}}
-
-                            {{-- start delete model --}}
-                            @include('dashboard.category.deletePartial')
-                            {{-- end delete model --}}
                         </tr>
                         @empty
                             <th class="text-center" colspan="8">No Data Found</th>

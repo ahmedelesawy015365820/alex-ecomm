@@ -44,7 +44,12 @@ return [
 
         'profile' => [
             'driver' => 'local',
-            'root' => public_path('assests/profile'),
+            'root' => public_path('assets/profile'),
+        ],
+
+        'product' => [
+            'driver' => 'local',
+            'root' => public_path('assets/products'),
         ],
 
         's3' => [

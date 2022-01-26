@@ -17,12 +17,15 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->json('name');
             $table->json('slug')->unique();
-            $table->text('description')->nullable();
+            $table->json('description')->nullable();
             $table->double('price');
+            $table->string('feature')->nullable();
             $table->unsignedBigInteger('quantity')->default(0);
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
-            $table->boolean('featured')->default(false);
             $table->boolean('status')->default(false);
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+            $table->foreignId('subcategory_id')->nullable()->constrained('categories')->cascadeOnDelete();
+            $table->foreignId('child_id')->nullable()->constrained('categories')->cascadeOnDelete();
+            $table->foreignId('subchild_id')->nullable()->constrained('categories')->cascadeOnDelete();
             $table->timestamps();
         });
     }

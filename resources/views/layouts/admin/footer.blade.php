@@ -24,11 +24,6 @@
 <script src="{{ asset('assets/js/clipboard/clipboard.min.js')}}"></script>
 <script src="{{ asset('assets/js/custom-card/custom-card.js')}}"></script>
 
-<!--counter js-->
-<script src="{{ asset('assets/js/counter/jquery.waypoints.min.js')}}"></script>
-<script src="{{ asset('assets/js/counter/jquery.counterup.min.js')}}"></script>
-<script src="{{ asset('assets/js/counter/counter-custom.js')}}"></script>
-
 @yield('chart')
 
 <!--right sidebar js-->
@@ -53,14 +48,124 @@
     });
 
     $('.name-ar').on('input', function(e) {
-            $('.slug-ar').val($(this).val());
+        $('.slug-ar').val($(this).val());
     });
 
     $('.name-en').on('input', function(e) {
-            $('.slug-en').val($(this).val());
+        $('.slug-en').val($(this).val());
     });
 
+    $('select[name="category_id"]').on('change', function () {
+        var category_id = $(this).val();
+
+        $('select[name="child_id"]').empty();
+        $('select[name="child_id"]').append('<option selected value="">Choose...</option>');
+        $('select[name="subchild_id"]').empty();
+        $('select[name="subchild_id"]').append('<option selected value="">Choose...</option>');
+        $('select[name="subcategory_id"]').empty();
+
+        if (category_id) {
+            $.ajax({
+                url: "{{ URL::to('/admin/categryselect') }}/" + category_id,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if(Object.keys(data).length > 0){
+                        $('.selectsubcategory').removeClass('subcategory_id');
+                        $('.selectchild').addClass('child_id');
+                        $('.selectsubchild').addClass('subchild_id');
+
+                        $('select[name="subcategory_id"]').empty();
+                        $('select[name="subcategory_id"]').append('<option selected value="">Choose...</option>');
+                        $.each(data, function (key, value) {
+                            $('select[name="subcategory_id"]').append('<option value="' + key + '">' + value + '</option>');
+                        });
+
+                    }else{
+                        $('.selectsubcategory').addClass('subcategory_id');
+                        $('.selectchild').addClass('child_id');
+                        $('.selectsubchild').addClass('subchild_id');
+                    }
+                },
+            });
+        }
+        else {
+            $('.selectsubcategory').addClass('subcategory_id');
+            $('.selectchild').addClass('child_id');
+            $('.selectsubchild').addClass('subchild_id');
+        }
+    });
+
+    $('select[name="subcategory_id"]').on('change', function () {
+
+        $('select[name="subchild_id"]').empty();
+        $('select[name="subchild_id"]').append('<option selected value="" >Choose...</option>');
+        $('select[name="child_id"]').empty();
+
+        var subcategory_id = $(this).val();
+        if (subcategory_id) {
+            $.ajax({
+                url: "{{ URL::to('/admin/categryselect') }}/" + subcategory_id,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if(Object.keys(data).length > 0){
+                        $('.selectchild').removeClass('child_id');
+                        $('.selectsubchild').addClass('subchild_id');
+
+                        $('select[name="child_id"]').empty();
+                        $('select[name="child_id"]').append('<option selected value="" >Choose...</option>');
+                        $.each(data, function (key, value) {
+                            $('select[name="child_id"]').append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    }else{
+                        $('.selectchild').addClass('child_id');
+                        $('.selectsubchild').addClass('subchild_id');
+                    }
+                },
+            });
+        }
+        else {
+            $('.selectchild').addClass('child_id');
+            $('.selectsubchild').addClass('subchild_id');
+        }
+    });
+
+    $('select[name="child_id"]').on('change', function () {
+
+        var child_id = $(this).val();
+        $('select[name="subchild_id"]').empty();
+
+        if (child_id) {
+            $.ajax({
+                url: "{{ URL::to('/admin/categryselect') }}/" + child_id,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    if(Object.keys(data).length > 0){
+                        $('.selectsubchild').removeClass('subchild_id');
+                        $('select[name="subchild_id"]').empty();
+                        $('select[name="subchild_id"]').append('<option selected value="" >Choose...</option>');
+                        $.each(data, function (key, value) {
+                            $('select[name="subchild_id"]').append('<option value="' + key + '">' + value + '</option>');
+                        });
+
+                    }else{
+                        $('.selectsubchild').addClass('subchild_id');
+                    }
+
+                },
+            });
+        }
+        else {
+            $('.selectsubchild').addClass('subchild_id');
+        }
+    });
+
+
 </script>
+
+@yield('js')
 
 </body>
 </html>

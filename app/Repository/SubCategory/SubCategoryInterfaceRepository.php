@@ -12,4 +12,6 @@ interface SubCategoryInterfaceRepository {
 
     public function destroy($category);
 
+    public function categryselect($id);
+
 }

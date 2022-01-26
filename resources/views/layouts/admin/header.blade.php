@@ -41,6 +41,6 @@
     <link rel="stylesheet" type="text/css" href="{{asset('assets/css/admin.css')}}">
 
     {{-- custom style --}}
-    @yield("css")
+    @yield("style")
 
 

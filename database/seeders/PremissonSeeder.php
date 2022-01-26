@@ -27,7 +27,15 @@ class PremissonSeeder extends Seeder
             'Category-list',
             'Category-create',
             'Category-edit',
-            'Category-delete'
+            'Category-delete',
+            'product-list',
+            'product-create',
+            'product-edit',
+            'product-delete',
+            'review-list',
+            'review-show',
+            'review-edit',
+            'review-delete'
             ];
 
         foreach ($permissions as $permission) {

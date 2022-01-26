@@ -25,10 +25,17 @@ class Category extends Model
 
     }
 
+    public function status()
+    {
+        return $this->status? 'Active' : "Inactive";
+    }
+
     public function scopeStatus($q)
     {
         return $q->whereStatus(1) ;
     }
+
+    // start relation
 
     public function parent()
     {
@@ -40,11 +47,20 @@ class Category extends Model
         return $this->hasMany(self::class,'parent_id');
     }
 
-
-    public function status()
-    {
-        return $this->status? 'Active' : "Inactive";
+    public function product_category() {
+        return $this->hasOne(Product::class,'category_id');
     }
 
+    public function product_subcategory() {
+        return $this->hasOne(Product::class,'subcategory_id');
+    }
+
+    public function product_child() {
+        return $this->hasOne(Product::class,'child_id');
+    }
+
+    public function product_subchild() {
+        return $this->hasOne(Product::class,'subchild_id');
+    }
 
 }

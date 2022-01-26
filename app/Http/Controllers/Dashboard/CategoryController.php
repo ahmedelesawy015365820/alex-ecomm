@@ -18,10 +18,10 @@ class CategoryController extends Controller
 
         $this->Category = $Category;
 
-        // $this->middleware('permission:Category-list', ['only' => ['index']]);
-        // $this->middleware('permission:Category-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:Category-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:Category-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:Category-list', ['only' => ['index']]);
+        $this->middleware('permission:Category-create', ['only' => ['create','store']]);
+        $this->middleware('permission:Category-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:Category-delete', ['only' => ['destroy']]);
 
     }
 

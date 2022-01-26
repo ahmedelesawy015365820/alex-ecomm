@@ -14,6 +14,7 @@ CKEDITOR.replace( 'editor1', {
     }
 } );
 
+
 // Inline ckeditor
 CKEDITOR.disableAutoInline = true;
 //init the area to be done
@@ -57,3 +58,7 @@ CKEDITOR.inline( 'area1', {
     fillEmptyBlocks: false,
     autoParagraph: false
 } );
+
+
+
+

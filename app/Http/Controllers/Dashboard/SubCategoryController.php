@@ -19,10 +19,10 @@ class SubCategoryController extends Controller
 
         $this->subCategory = $subCategory;
 
-        // $this->middleware('permission:Category-list', ['only' => ['index']]);
-        // $this->middleware('permission:Category-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:Category-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:Category-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:Category-list', ['only' => ['index']]);
+        $this->middleware('permission:Category-create', ['only' => ['create','store']]);
+        $this->middleware('permission:Category-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:Category-delete', ['only' => ['destroy']]);
 
     }
 
@@ -36,13 +36,17 @@ class SubCategoryController extends Controller
         return $this->subCategory->store($request);
     }
 
-    public function update(SubCategoryRequest $request, Category $category)
+    public function update(SubCategoryRequest $request, Category $subCategory)
     {
-        return $this->subCategory->update($request, $category);
+        return $this->subCategory->update($request, $subCategory);
     }
 
     public function destroy(Category $category)
     {
         return $this->subCategory->destroy($category);
+    }
+
+    public function categryselect($id){
+        return $this->subCategory->categryselect($id);
     }
 }

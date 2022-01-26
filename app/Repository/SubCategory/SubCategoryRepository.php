@@ -11,14 +11,10 @@ class SubCategoryRepository implements SubCategoryInterfaceRepository {
     public function index($request)
     {
 
-        $categories = Category::whereParentId(0)->when($request->search,function ($q) use ($request){
-            return $q->whereParentId(0)->where('name->ar','like',"%". $request->search ."%")
-                    ->Orwhere('name->en','like',"%". $request->search ."%");
-        })->when($request->status,function ($e) use($request){
-            return $e->whereStatus($request->status);
-        })->paginate(8);
+        $categories = Category::whereParentId(0)->with(str_repeat('children.',5))->paginate(2);
+        $selectCategory = Category::whereParentId(0)->get();
 
-        return view('dashboard.category.index',compact('categories'));
+        return view('dashboard.subcategory.index',compact('categories','selectCategory'));
 
     }//*****end index
 
@@ -26,25 +22,42 @@ class SubCategoryRepository implements SubCategoryInterfaceRepository {
     {
         try{
             DB::beginTransaction();
+            $id = 0;
+
+            if($request->subchild_id){
+                $id = $request->subchild_id;
+            }else{
+                if($request->child_id){
+                    $id = $request->child_id;
+                }else{
+                    if($request->subcategory_id){
+                        $id = $request->subcategory_id;
+                    }else{
+                        $id = $request->category_id;
+                    }
+                }
+            }
+
             Category::create([
                 'name' => ['en' => $request->name_en, 'ar' => $request->name_ar],
                 'slug' => [
                     'en' => SlugService::createSlug(Category::class,'slug',$request->slug_en),
                     'ar' => SlugService::createSlug(Category::class,'slug',$request->slug_ar)
                 ],
-                'status' => ($request->status ? true: false)
+                'status' => ($request->status ? true: false),
+                "parent_id" => $id
             ]);
 
             toastr()->success('Successfully added');
             DB::commit();
-            return redirect()->route('category.index');
+            return redirect()->route('subCategory.index');
 
         }
         catch(\Exception $ex){
 
             toastr()->error($ex);
             DB::rollBack();
-            return redirect()->route('category.index');
+            return redirect()->route('subCategory.index');
         }
 
     }//*****end store
@@ -55,26 +68,49 @@ class SubCategoryRepository implements SubCategoryInterfaceRepository {
 
         try{
             DB::beginTransaction();
+            $id = 0;
 
-            $category->update([
-                'name' => ['en' => $request->name_en, 'ar' => $request->name_ar],
-                'slug' => [
-                    'en' => SlugService::createSlug(Category::class,'slug',$request->slug_en),
-                    'ar' => SlugService::createSlug(Category::class,'slug',$request->slug_ar)
-                ],
-                'status' => ($request->status ? true: false)
-            ]);
+            if($request->subchild_id){
+                $id = $request->subchild_id;
+            }else{
+                if($request->child_id){
+                    $id = $request->child_id;
+                }else{
+                    if($request->subcategory_id){
+                        $id = $request->subcategory_id;
+                    }else{
+                        if($request->category_id){
+                            $id = $request->category_id;
+                        }else{
+                            $id = 0;
+                        }
+                    }
+                }
+            }
+
+            if($id){
+                $input = ["parent_id" => $id];
+            }
+
+            $input['name'] = ['en' => $request->name_en, 'ar' => $request->name_ar];
+            $input['slug'] = [
+                'en' => SlugService::createSlug(Category::class,'slug',$request->slug_en),
+                'ar' => SlugService::createSlug(Category::class,'slug',$request->slug_ar)
+            ];
+            $input['status'] = $request->status ? true: false;
+
+            $category->update($input);
 
             toastr()->success('Edited successfully');
             DB::commit();
-            return redirect()->route('category.index');
+            return redirect()->route('subCategory.index');
 
         }
         catch(\Exception $ex){
 
             toastr()->error($ex);
             DB::rollBack();
-            return redirect()->route('category.index');
+            return redirect()->route('subCategory.index');
         }
 
     }//*****end update
@@ -88,16 +124,22 @@ class SubCategoryRepository implements SubCategoryInterfaceRepository {
 
             toastr()->success('Deleted successfully');
             DB::commit();
-            return redirect()->route('category.index');
+            return redirect()->route('subCategory.index');
 
         }
         catch( \Exception $ex){
 
             toastr()->error($ex);
             DB::rollBack();
-            return redirect()->route('category.index');
+            return redirect()->route('subCategory.index');
         }
     }//*****end destroy
 
+    public function categryselect($id){
+
+        $list_categry = Category::whereParentId($id)->pluck("name", "id");
+        return response()->json($list_categry);
+
+    }
 
 }

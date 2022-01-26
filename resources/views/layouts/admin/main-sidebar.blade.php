@@ -10,17 +10,23 @@
                 </div>
                 <ul class="sidebar-menu">
                     <li><a class="sidebar-header" href="{{route('admin')}}"><i data-feather="home"></i><span>Dashboard</span></a></li>
-                    <li><a class="sidebar-header" href="#"><i data-feather="box"></i> <span>Products</span><i class="fa fa-angle-right pull-right"></i></a>
+                    @can('Category-list')
+                    <li><a class="sidebar-header" href="#"><i data-feather="box"></i> <span>Categories</span><i class="fa fa-angle-right pull-right"></i></a>
                         <ul class="sidebar-submenu">
                             <li><a href="{{ route('category.index')}}"><i class="fa fa-circle"></i>Category</a></li>
-                            <li><a href="category-sub.html"><i class="fa fa-circle"></i>Sub Category</a></li>
-                            <li><a href="product-list.html"><i class="fa fa-circle"></i>Product Category</a></li>
-                            <li><a href="product-detail.html"><i class="fa fa-circle"></i>Child Category</a></li>
-                            <li><a href="add-product.html"><i class="fa fa-circle"></i>Product</a></li>
+                            <li><a href="{{route('subCategory.index')}}"><i class="fa fa-circle"></i>Sub Category</a></li>
                         </ul>
                     </li>
-                    <li><a class="sidebar-header" href=""><i data-feather="users"></i><span>Reviews</span></a></li>
-                    <li><a class="sidebar-header" href=""><i data-feather="dollar-sign"></i><span>Customers</span></a></li>
+                    @endcan
+
+                    @can('product-list')
+                    <li><a class="sidebar-header" href="{{route('product.index')}}"><i data-feather="users"></i><span>Products</span></a></li>
+                    @endcan
+
+                    @can('review-list')
+                    <li><a class="sidebar-header" href="{{route('review.index')}}"><i data-feather="users"></i><span>Reviews</span></a></li>
+                    @endcan
+                    {{-- <li><a class="sidebar-header" href=""><i data-feather="dollar-sign"></i><span>Customers</span></a></li> --}}
 
                     @can('user-list')
                         <li><a class="sidebar-header" href=""><i data-feather="user-plus"></i><span>Admins</span><i class="fa fa-angle-right pull-right"></i></a>
